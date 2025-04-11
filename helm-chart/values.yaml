@@ -1,0 +1,22 @@
+replicaCount: 1
+
+image:
+  repository: hello-python  # Use the local image name without the registry URL
+  pullPolicy: IfNotPresent
+  tag: latest
+
+service:
+  name: hello-python-service
+  type: ClusterIP
+  port: 80
+  targetPort: 3000
+
+ingress:
+  enabled: false
+  annotations: {}
+  path: /
+  hosts:
+    - hello-python.local
+  tls: []
+
+resources: {}
