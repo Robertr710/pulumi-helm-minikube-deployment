@@ -33,9 +33,14 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          eval $(minikube docker-env)
+          eval $(minikube docker-env)  # Ensure Minikube's Docker environment is used
           docker build -t hello-python:latest ./python-app
-          minikube image load hello-python:latest
+
+      - name: Load Docker Image into Minikube
+        run: |
+          eval $(minikube docker-env)  # Ensure Minikube's Docker environment is used
+          docker images  # Verify if the image exists locally in Minikube's registry
+          minikube image load hello-python:latest  # Load the image into Minikube's Docker registry
 
       - name: Activate venv and install dependencies
         run: |
@@ -50,7 +55,7 @@ jobs:
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
         run: |
-          eval $(minikube docker-env)
+          eval $(minikube docker-env)  # Ensure we are using Minikube's Docker
           source venv/bin/activate
           pulumi stack select dev
           pulumi preview
@@ -60,6 +65,6 @@ jobs:
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
         run: |
-          eval $(minikube docker-env)
+          eval $(minikube docker-env)  # Ensure we are using Minikube's Docker
           source venv/bin/activate
           pulumi up --yes
