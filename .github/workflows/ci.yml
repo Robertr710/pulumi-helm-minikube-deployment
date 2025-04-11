@@ -30,24 +30,22 @@ jobs:
           curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
           sudo install minikube-linux-amd64 /usr/local/bin/minikube
           minikube start --driver=docker --wait=all
+          eval $(minikube docker-env)
+          minikube status
 
       - name: Build Docker Image
         run: |
-          eval $(minikube docker-env)  # Ensure Minikube's Docker environment is used
+          eval $(minikube docker-env)
           docker build -t hello-python:latest ./python-app
-
-      - name: Load Docker Image into Minikube
-        run: |
-          eval $(minikube docker-env)  # Ensure Minikube's Docker environment is used
-          minikube status
-          docker images  # Verify if the image exists locally in Minikube's registry
-          minikube image load hello-python:latest  # Load the image into Minikube's Docker registry
+          echo "Built image list:"
+          docker images | grep hello-python
 
       - name: Activate venv and install dependencies
         run: |
           cd pulumi-deployment
           python -m venv venv
           source venv/bin/activate
+          pip install --upgrade pip
           pip install pulumi pulumi_kubernetes
           pip install -r requirements.txt
 
@@ -56,7 +54,7 @@ jobs:
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
         run: |
-          eval $(minikube docker-env)  # Ensure we are using Minikube's Docker
+          eval $(minikube docker-env)
           source venv/bin/activate
           pulumi stack select dev
           pulumi preview
@@ -66,10 +64,9 @@ jobs:
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
         run: |
-          eval $(minikube docker-env)  # Ensure we are using Minikube's Docker
+          eval $(minikube docker-env)
           source venv/bin/activate
           pulumi up --yes
-
-      - name: Check Kubernetes Pods
+      - name: Check K8s pods 
         run: |
-          kubectl get pods -A  # To check all namespaces
+          kubectl get pods -A
