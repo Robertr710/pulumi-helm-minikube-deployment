@@ -35,7 +35,7 @@ jobs:
         run: |
           eval $(minikube docker-env)
           docker build -t hello-python:latest ./python-app
-           minikube image load hello-python:latest
+          minikube image load hello-python:latest
 
       - name: Activate venv and install dependencies
         run: |
