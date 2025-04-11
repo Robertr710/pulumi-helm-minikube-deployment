@@ -10,7 +10,7 @@ chart = Chart(
             "replicaCount": 1,
             "image": {
                 "repository": "hello-python",  # This must match your Docker image name
-                "pullPolicy": "Never",
+                "pullPolicy": "IfNotPresent",
                 "tag": "latest",
             },
             "service": {
