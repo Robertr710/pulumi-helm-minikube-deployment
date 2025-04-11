@@ -35,6 +35,7 @@ jobs:
         run: |
           eval $(minikube docker-env)  # Ensure Minikube's Docker environment is used
           docker build -t hello-python:latest ./python-app
+          sleep 15
 
       - name: Load Docker Image into Minikube
         run: |
