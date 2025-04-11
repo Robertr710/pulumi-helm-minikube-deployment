@@ -30,27 +30,31 @@ jobs:
           curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
           sudo install minikube-linux-amd64 /usr/local/bin/minikube
           minikube start --driver=docker --wait=all
+          minikube status
+          minikube docker-env
 
       - name: Build Docker Image
         run: |
           eval $(minikube docker-env)
           docker build -t hello-python:latest ./python-app
+          echo "Built images:"
+          docker images | grep hello-python
 
       - name: Load Docker Image into Minikube
         run: |
           eval $(minikube docker-env)
+          echo "Images before loading:"
+          docker images | grep hello-python
           minikube image load hello-python:latest
-
-      - name: Confirm Image is in Minikube
-        run: |
-          echo "Checking for hello-python image inside Minikube node..."
-          minikube ssh "docker images | grep hello-python" || (echo 'Image not found inside Minikube!' && exit 1)
+          echo "Images after loading (double-check):"
+          docker images | grep hello-python
 
       - name: Activate venv and install dependencies
         run: |
           cd pulumi-deployment
           python -m venv venv
           source venv/bin/activate
+          pip install --upgrade pip
           pip install pulumi pulumi_kubernetes
           pip install -r requirements.txt
 
