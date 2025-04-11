@@ -52,9 +52,15 @@ jobs:
           pip install pulumi pulumi_kubernetes  # Ensure dependencies are installed
           pip install -r pulumi-deployment/requirements.txt  # If you have any dependencies listed
 
+      - name: Set Pulumi Access Token
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}  # Use GitHub secret for Pulumi Access Token
+        run: |
+          echo "Pulumi Access Token set"
+
       - name: Pulumi Preview
         run: |
-          pulumi stack select dev  # Replace with your stack name
+          pulumi stack select dev  # Replace with your actual stack name
           pulumi preview
 
       - name: Pulumi Up (Deploy)
