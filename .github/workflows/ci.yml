@@ -30,23 +30,14 @@ jobs:
           curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
           sudo install minikube-linux-amd64 /usr/local/bin/minikube
           minikube start --driver=docker --wait=all
+          eval $(minikube docker-env)
           minikube status
-          minikube docker-env
 
       - name: Build Docker Image
         run: |
           eval $(minikube docker-env)
           docker build -t hello-python:latest ./python-app
-          echo "Built images:"
-          docker images | grep hello-python
-
-      - name: Load Docker Image into Minikube
-        run: |
-          eval $(minikube docker-env)
-          echo "Images before loading:"
-          docker images | grep hello-python
-          minikube image load hello-python:latest
-          echo "Images after loading (double-check):"
+          echo "Built image list:"
           docker images | grep hello-python
 
       - name: Activate venv and install dependencies
