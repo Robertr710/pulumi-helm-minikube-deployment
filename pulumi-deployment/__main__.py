@@ -4,13 +4,13 @@ from pulumi_kubernetes.helm.v3 import Chart, LocalChartOpts
 # Get the current Pulumi stack name (e.g., "dev" or "prd")
 stack = pulumi.get_stack()
 
-# Define custom overrides based on the stack
+# Define custom overrides based on the stack. Overrides is my dictionary. 
 overrides = {
     "fullnameOverride": f"hello-python-{stack}",
     "stack": stack,
 }
 
-# Optionally add prd-specific overrides
+# Optionally add prd-specific overrides using a dictionary update method
 if stack == "prd":
     overrides.update({
         "replicaCount": 3,
