@@ -1,5 +1,7 @@
 replicaCount: 1
 
+fullnameOverride: ""
+stack: "dev"
 image:
   repository: hello-python  # Use the local image name without the registry URL
   pullPolicy: IfNotPresent

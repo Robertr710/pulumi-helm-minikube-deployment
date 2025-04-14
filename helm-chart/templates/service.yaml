@@ -1,9 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "helm-chart.fullname" . }}
+  name: {{ .Values.fullnameOverride | default (include "helm-chart.fullname" .) }}
   labels:
     app: {{ include "helm-chart.name" . }}
+    stack: {{ .Values.stack | default "dev" }}
 spec:
   type: {{ .Values.service.type }}
   ports:
@@ -11,3 +12,4 @@ spec:
       targetPort: {{ .Values.service.targetPort }}
   selector:
     app: {{ include "helm-chart.name" . }}
+    stack: {{ .Values.stack | default "dev" }}

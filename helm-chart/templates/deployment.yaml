@@ -1,18 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "helm-chart.fullname" . }}
+  name: {{ .Values.fullnameOverride | default (include "helm-chart.fullname" .) }}
   labels:
     app: {{ include "helm-chart.name" . }}
+    stack: {{ .Values.stack | default "dev" }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       app: {{ include "helm-chart.name" . }}
+      stack: {{ .Values.stack | default "dev" }}
   template:
     metadata:
       labels:
         app: {{ include "helm-chart.name" . }}
+        stack: {{ .Values.stack | default "dev" }}
     spec:
       containers:
         - name: {{ .Chart.Name }}
